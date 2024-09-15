@@ -1,3 +1,6 @@
+//
+
+// server file
 package main
 
 import (
@@ -5,14 +8,13 @@ import (
 )
 
 func main() {
-	// Menentukan direktori yang akan disajikan
-	fs := http.FileServer(http.Dir("./view"))
+	// Mengatur route untuk melayani file statis
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-	// Menggunakan FileServer untuk menyajikan file dari root ("/")
-	http.Handle("/", fs)
+		// Melayani file HTML ke ResponseWriter
+		http.ServeFile(w, r, "index.html")
+	})
 
-	// Menjalankan server HTTP di port 8080
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		panic(err)
-	}
+	// Menjalankan server di port 8080
+	http.ListenAndServe(":8080", nil)
 }
