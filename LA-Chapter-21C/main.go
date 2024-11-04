@@ -1,9 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
+
+type requestData struct {
+	Name  string
+	Age   int
+	Email string
+}
 
 func queryHandler(w http.ResponseWriter, r *http.Request) {
 	// Mengambil query parameter dari URL
@@ -21,6 +28,18 @@ func queryHandler(w http.ResponseWriter, r *http.Request) {
 	if age == "" {
 		age = "unknown"
 	}
+
+	requestData := requestData{}
+
+	// Decode JSON dari body request ke struct
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+		http.Error(w, "Failed to parse JSON", http.StatusBadRequest)
+		return
+	}
+
+	// Contoh penggunaan data yang diambil
+	fmt.Fprintf(w, "Received Name: %s, Age: %d, Email: %s", requestData.Name, requestData.Age, requestData.Email)
 
 	// Mengirimkan respons ke client
 	fmt.Fprintf(w, "Hello, %s! Your age is %s.\n", name, age)

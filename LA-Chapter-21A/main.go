@@ -1,4 +1,4 @@
-// handler
+// // handler
 // package main
 
 // import (
@@ -20,7 +20,7 @@
 // 	http.ListenAndServe(":8080", nil)
 // }
 
-// function handler
+// // function handler
 // package main
 
 // import (
