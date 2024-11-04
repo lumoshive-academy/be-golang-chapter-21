@@ -10,14 +10,18 @@ import (
 func main() {
 	serverMux := http.NewServeMux()
 
-	serverMux.HandleFunc("POST /login", handler.LoginHandler)
+	authMux := http.NewServeMux()
+	authMux.HandleFunc("POST /login", handler.LoginHandler)
 
-	muxwithmiddleware := http.NewServeMux()
-	muxwithmiddleware.HandleFunc("GET /customer_detail", handler.GetCustomerByID)
+	resourceMux := http.NewServeMux()
+	resourceMux.HandleFunc("GET /customer_detail", handler.GetCustomerByID)
 
-	role := middleware.Role(muxwithmiddleware)
+	role := middleware.Role(resourceMux)
 	middleware := middleware.Middleware(role)
 
+	serverMux.Handle("/", authMux)
+	serverMux.Handle("/customer/", http.StripPrefix("/customer", middleware))
+
 	fmt.Println("server started on port 8080")
-	http.ListenAndServe(":8080", middleware)
+	http.ListenAndServe(":8080", serverMux)
 }
