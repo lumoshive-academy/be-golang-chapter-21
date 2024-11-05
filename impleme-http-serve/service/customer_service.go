@@ -13,9 +13,9 @@ func NewCustomerService(repo repository.CustomerRepository) CustomerService {
 	return CustomerService{RepoCustomer: repo}
 }
 
-func (cs *CustomerService) LoginService(customer model.Customer) error {
+func (cs *CustomerService) LoginService(customer *model.Customer) error {
 
-	err := cs.RepoCustomer.Login(&customer)
+	err := cs.RepoCustomer.Login(customer)
 	if err != nil {
 		return err
 	}
@@ -30,4 +30,14 @@ func (cs *CustomerService) CustomerByID(id int) (*model.Customer, error) {
 		return nil, err
 	}
 	return customer, nil
+}
+
+func (cs *CustomerService) UpdateCustomer(id int, data model.Customer) error {
+
+	_, err := cs.RepoCustomer.Update(id, &data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

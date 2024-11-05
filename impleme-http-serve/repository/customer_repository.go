@@ -31,3 +31,18 @@ func (cr *CustomerRepository) CustomerByID(id int) (*model.Customer, error) {
 	}
 	return &customer, nil
 }
+
+func (cr *CustomerRepository) Update(id int, data *model.Customer) (int, error) {
+	query := `UPDATE SET username=$1 WHERE id=$1`
+	result, err := cr.DB.Exec(query, data.Username, id)
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(rowsAffected), nil
+}
